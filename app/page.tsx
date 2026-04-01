@@ -157,14 +157,6 @@ const awards = [
   },
 ];
 
-const skills = [
-  { name: "Excel", level: "Expert" },
-  { name: "SQL", level: "Fluent" },
-  { name: "Tableau", level: "Fluent" },
-  { name: "Agile", level: "Fluent" },
-  { name: "Linux", level: "Fundamental" },
-];
-
 const interests = ["Motorcycle Touring (ride around the world — 36% complete)", "Indoor Rock Climbing"];
 
 const fascinates = [
@@ -388,32 +380,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SKILLS & INTERESTS ── */}
+      {/* ── INTERESTS ── */}
       <section className="py-20 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12">
-          {/* Skills */}
-          <div className="reveal">
-            <h2 className="text-2xl font-bold text-royal-700 mb-8">Technical Skills</h2>
-            <div className="space-y-4">
-              {skills.map(({ name, level }) => (
-                <div key={name} className="flex items-center justify-between bg-white rounded-xl px-5 py-3 border border-slate-100 shadow-sm">
-                  <span className="font-medium text-slate-800">{name}</span>
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                    level === "Expert" ? "bg-royal-100 text-royal-700" :
-                    level === "Fluent" ? "bg-green-50 text-green-700" :
-                    "bg-slate-100 text-slate-600"
-                  }`}>{level}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Interests */}
+        <div className="max-w-5xl mx-auto px-6">
           <div className="reveal">
             <h2 className="text-2xl font-bold text-royal-700 mb-8">Interests</h2>
-            <div className="space-y-3">
+            <div className="grid md:grid-cols-2 gap-4">
               {interests.map((interest) => (
-                <div key={interest} className="flex items-start gap-3 bg-white rounded-xl px-5 py-3 border border-slate-100 shadow-sm">
+                <div key={interest} className="flex items-start gap-3 bg-white rounded-xl px-5 py-4 border border-slate-100 shadow-sm">
                   <span className="mt-1.5 w-2 h-2 rounded-full bg-royal-400 flex-shrink-0" />
                   <span className="text-slate-700 text-sm">{interest}</span>
                 </div>
