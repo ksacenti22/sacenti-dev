@@ -34,33 +34,8 @@ export default function PineapplePage() {
       {/* Content */}
       <article className="max-w-3xl mx-auto px-6 py-14 space-y-8">
 
-        {/* H1 */}
-        <h2 className="text-2xl font-bold text-amber-700">
-          The Significance of the Pineapple — A Symbol of Hospitality
-        </h2>
-
-        {/* Paragraphs */}
-        <p className="text-slate-700 leading-relaxed text-lg">
-          As the tale goes, colonial merchants would leave the fruit of their trade, the exotic
-          pineapple, outside their homes as a symbol of safe return and an invitation to come say hello.
-        </p>
-
-        <p className="text-slate-700 leading-relaxed text-lg">
-          Earlier still, North American and European merchants used pineapples to welcome their most
-          honored guests. If you wanted to impress your dinner party, you'd unveil the most exotic and
-          expensive treat, the "King of Fruit". While pineapples remained rare in non-tropical climates
-          until the 1800s, the symbol took root. The crowned fruit became common in architecture as a
-          sign of good cheer, warmth and celebration.
-        </p>
-
-        <p className="text-slate-700 leading-relaxed text-lg">
-          Today, hospitality organizations retain the pineapple as a token of guest-first mindset,
-          selfless service and leading with integrity. These traits guide my personal and professional
-          action each day.
-        </p>
-
         {/* Images */}
-        <div className="grid md:grid-cols-2 gap-8 pt-4">
+        <div className="grid md:grid-cols-2 gap-8">
 
           {/* Image 1 */}
           <a
@@ -109,6 +84,32 @@ export default function PineapplePage() {
           </a>
 
         </div>
+
+        {/* H2 */}
+        <h2 className="text-2xl font-bold text-amber-700">
+          The Significance of the Pineapple — A Symbol of Hospitality
+        </h2>
+
+        {/* Paragraphs */}
+        <p className="text-slate-700 leading-relaxed text-lg">
+          As the tale goes, colonial merchants would leave the fruit of their trade, the exotic
+          pineapple, outside their homes as a symbol of safe return and an invitation to come say hello.
+        </p>
+
+        <p className="text-slate-700 leading-relaxed text-lg">
+          Earlier still, North American and European merchants used pineapples to welcome their most
+          honored guests. If you wanted to impress your dinner party, you'd unveil the most exotic and
+          expensive treat, the "King of Fruit". While pineapples remained rare in non-tropical climates
+          until the 1800s, the symbol took root. The crowned fruit became common in architecture as a
+          sign of good cheer, warmth and celebration.
+        </p>
+
+        <p className="text-slate-700 leading-relaxed text-lg">
+          Today, hospitality organizations retain the pineapple as a token of guest-first mindset,
+          selfless service and leading with integrity. These traits guide my personal and professional
+          action each day.
+        </p>
+
       </article>
 
       {/* Back link */}
