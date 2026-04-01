@@ -1,7 +1,10 @@
 "use client";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export default function ScrollReveal() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -14,21 +17,17 @@ export default function ScrollReveal() {
       { threshold: 0.12 }
     );
 
-    const observe = () => {
+    // Small delay to let the incoming page finish rendering before observing
+    const timer = setTimeout(() => {
       const targets = document.querySelectorAll(".reveal, .reveal-stagger");
       targets.forEach((el) => observer.observe(el));
-    };
-
-    // Run immediately for hard refreshes, then again after a tick
-    // to catch elements rendered after client-side navigation
-    observe();
-    const timer = setTimeout(observe, 50);
+    }, 50);
 
     return () => {
       clearTimeout(timer);
       observer.disconnect();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
