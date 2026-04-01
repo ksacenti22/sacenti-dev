@@ -14,10 +14,20 @@ export default function ScrollReveal() {
       { threshold: 0.12 }
     );
 
-    const targets = document.querySelectorAll(".reveal, .reveal-stagger");
-    targets.forEach((el) => observer.observe(el));
+    const observe = () => {
+      const targets = document.querySelectorAll(".reveal, .reveal-stagger");
+      targets.forEach((el) => observer.observe(el));
+    };
 
-    return () => observer.disconnect();
+    // Run immediately for hard refreshes, then again after a tick
+    // to catch elements rendered after client-side navigation
+    observe();
+    const timer = setTimeout(observe, 50);
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
   }, []);
 
   return null;
