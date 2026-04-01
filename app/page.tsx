@@ -148,6 +148,7 @@ const awards = [
     title: "Outstanding Young Alumni",
     year: "2022",
     bullet: "Awarded for incorporating the Young Alumni Council as a subgroup of the Hospitality Alumni Leadership Board, including authoring bylaws.",
+    href: "https://www.isenberg.umass.edu/news/hospitality-professionals-honored-annual-awards-dinner",
   },
   {
     org: "Boy Scouts of America",
@@ -368,7 +369,13 @@ export default function HomePage() {
             {awards.map((a, i) => (
               <div key={i} className="bg-royal-50 border border-royal-100 rounded-2xl p-6">
                 <div className="flex justify-between items-start mb-1">
-                  <h3 className="font-bold text-slate-900">{a.title}</h3>
+                  <h3 className="font-bold text-slate-900">
+                    {a.href ? (
+                      <a href={a.href} target="_blank" rel="noopener noreferrer" className="hover:text-royal-600 transition-colors underline decoration-royal-300 underline-offset-2">
+                        {a.title}
+                      </a>
+                    ) : a.title}
+                  </h3>
                   <span className="text-sm text-slate-400">{a.year}</span>
                 </div>
                 <p className="text-royal-600 text-sm font-medium mb-1">{a.org}</p>
