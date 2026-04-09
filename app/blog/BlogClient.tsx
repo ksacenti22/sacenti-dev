@@ -10,20 +10,33 @@ export default function BlogClient({
   posts: PostMeta[];
   tags: string[];
 }) {
-  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
 
-  const filtered = activeTag
-    ? posts.filter((p) => p.tags.includes(activeTag))
-    : posts;
+  const toggleTag = (tag: string) => {
+    setActiveTags((prev) => {
+      const next = new Set(prev);
+      if (next.has(tag)) {
+        next.delete(tag);
+      } else {
+        next.add(tag);
+      }
+      return next;
+    });
+  };
+
+  const filtered =
+    activeTags.size === 0
+      ? posts
+      : posts.filter((p) => p.tags.some((t) => activeTags.has(t)));
 
   return (
     <>
       {/* Tag filters */}
       <div className="flex flex-wrap gap-2 mb-10">
         <button
-          onClick={() => setActiveTag(null)}
+          onClick={() => setActiveTags(new Set())}
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-            activeTag === null
+            activeTags.size === 0
               ? "bg-royal-600 text-white shadow"
               : "bg-royal-50 text-royal-600 hover:bg-royal-100 border border-royal-100"
           }`}
@@ -33,9 +46,9 @@ export default function BlogClient({
         {tags.map((tag) => (
           <button
             key={tag}
-            onClick={() => setActiveTag(tag === activeTag ? null : tag)}
+            onClick={() => toggleTag(tag)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              activeTag === tag
+              activeTags.has(tag)
                 ? "bg-royal-600 text-white shadow"
                 : "bg-royal-50 text-royal-600 hover:bg-royal-100 border border-royal-100"
             }`}
