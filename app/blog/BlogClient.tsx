@@ -27,7 +27,7 @@ export default function BlogClient({
   const filtered =
     activeTags.size === 0
       ? posts
-      : posts.filter((p) => p.tags.some((t) => activeTags.has(t)));
+      : posts.filter((p) => Array.from(activeTags).every((t) => p.tags.includes(t)));
 
   return (
     <>
