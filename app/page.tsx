@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import VibeCheck from "@/components/VibeCheck";
 
 const socialLinks = [
   {
@@ -434,6 +435,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <VibeCheck />
     </>
   );
 }
