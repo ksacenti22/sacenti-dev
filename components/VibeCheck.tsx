@@ -19,7 +19,7 @@ const vibeLabel = (v: number) => {
   if (v <= 15) return { emoji: "😴", label: "Dead tired" };
   if (v <= 30) return { emoji: "😐", label: "Meh" };
   if (v <= 45) return { emoji: "🙂", label: "Doing okay" };
-  if (v <= 60) return { emoji: "😊", label: "Pretty good" };
+  if (v <= 60) return { emoji: "😎", label: "Pretty good" };
   if (v <= 75) return { emoji: "😄", label: "Feeling great" };
   if (v <= 90) return { emoji: "⚡", label: "Energized" };
   return { emoji: "🚀", label: "On fire" };
@@ -118,19 +118,46 @@ export default function VibeCheck() {
 
             {/* Slider */}
             <div className="px-4">
-              <div className="relative">
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={vibe}
-                  onChange={(e) => setVibe(Number(e.target.value))}
-                  className="w-full h-3 rounded-full appearance-none cursor-pointer accent-royal-600"
-                  style={{
-                    background: `linear-gradient(to right, #93c5fd, #3b82f6, #1d4ed8)`,
-                  }}
-                />
-              </div>
+              <style>{`
+                .vibe-slider {
+                  -webkit-appearance: none;
+                  appearance: none;
+                  width: 100%;
+                  height: 12px;
+                  border-radius: 999px;
+                  background: linear-gradient(to right, #93c5fd, #3b82f6, #1d4ed8);
+                  outline: none;
+                  cursor: pointer;
+                }
+                .vibe-slider::-webkit-slider-thumb {
+                  -webkit-appearance: none;
+                  appearance: none;
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: white;
+                  border: 3px solid #1d4ed8;
+                  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.35);
+                  cursor: pointer;
+                }
+                .vibe-slider::-moz-range-thumb {
+                  width: 28px;
+                  height: 28px;
+                  border-radius: 50%;
+                  background: white;
+                  border: 3px solid #1d4ed8;
+                  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.35);
+                  cursor: pointer;
+                }
+              `}</style>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={vibe}
+                onChange={(e) => setVibe(Number(e.target.value))}
+                className="vibe-slider"
+              />
               <div className="flex justify-between text-xs text-slate-400 mt-3">
                 <span>😴 Dead tired</span>
                 <span>← drag →</span>
