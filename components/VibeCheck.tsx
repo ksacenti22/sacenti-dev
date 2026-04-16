@@ -42,12 +42,16 @@ export default function VibeCheck() {
   const [result, setResult] = useState<Result | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [myVibe, setMyVibe] = useState<{ emoji: string; label: string } | null>(null);
 
   useEffect(() => {
     // Check if already submitted this month
     try {
-      if (localStorage.getItem(storageKey())) {
+      const stored = localStorage.getItem(storageKey());
+      if (stored) {
         setSubmitted(true);
+        const parsed = JSON.parse(stored);
+        if (parsed.emoji && parsed.label) setMyVibe(parsed);
       }
     } catch {}
 
@@ -77,9 +81,11 @@ export default function VibeCheck() {
       const data = await res.json();
       setResult(data);
       setSubmitted(true);
-      // Mark as voted for this month
+      const myVibeData = vibeLabel(vibe);
+      setMyVibe(myVibeData);
+      // Mark as voted for this month, store their vibe for returning visits
       try {
-        localStorage.setItem(storageKey(), "true");
+        localStorage.setItem(storageKey(), JSON.stringify(myVibeData));
       } catch {}
     } catch {
       // fail silently
@@ -104,9 +110,14 @@ export default function VibeCheck() {
     <section className="bg-gradient-to-br from-royal-50 via-white to-slate-50 border-t border-slate-100 py-20">
       <div className="max-w-2xl mx-auto px-6 text-center">
 
-        <h2 className="text-3xl font-extrabold text-slate-900 mb-10">
+        <h2 className={`text-3xl font-extrabold text-slate-900 ${submitted ? "mb-3" : "mb-10"}`}>
           What's your vibe right now?
         </h2>
+        {submitted && myVibe && (
+          <p className="text-xl font-semibold text-royal-600 mb-8">
+            You're {myVibe.label} {myVibe.emoji}
+          </p>
+        )}
 
         {!submitted ? (
           <div className="space-y-8">
@@ -177,7 +188,6 @@ export default function VibeCheck() {
         ) : (
           /* Post-submit result */
           <div className="space-y-4">
-            <div className="text-6xl">{result ? current.emoji : (avgVibeDisplay?.emoji ?? "😊")}</div>
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
               {/* Collective vibe — hero */}
               <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-3">
@@ -186,8 +196,11 @@ export default function VibeCheck() {
               <p className="text-3xl font-bold text-slate-800 mb-1">
                 {avgVibeDisplay?.emoji} {avgVibeDisplay?.label}
               </p>
-              <p className="text-slate-400 text-sm mb-6">
+              <p className="text-slate-400 text-sm">
                 Based on {displayResult?.monthCount.toLocaleString()} {displayResult?.monthCount === 1 ? "check-in" : "check-ins"} this month
+              </p>
+              <p className="text-slate-500 text-sm font-medium mb-6">
+                Check in again in {new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toLocaleDateString("en-US", { month: "long" })}
               </p>
 
               {/* Visitor count — secondary */}
