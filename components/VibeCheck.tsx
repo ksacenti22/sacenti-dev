@@ -36,6 +36,8 @@ const storageKey = () => {
   return `vibeCheck:${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 };
 
+const VISITOR_NUMBER_KEY = "vibeVisitorNumber";
+
 export default function VibeCheck() {
   const [vibe, setVibe] = useState(50);
   const [stats, setStats] = useState<Stats | null>(null);
@@ -43,6 +45,7 @@ export default function VibeCheck() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [myVibe, setMyVibe] = useState<{ emoji: string; label: string } | null>(null);
+  const [permanentVisitorNumber, setPermanentVisitorNumber] = useState<number | null>(null);
 
   useEffect(() => {
     // Check if already submitted this month
@@ -52,6 +55,11 @@ export default function VibeCheck() {
         setSubmitted(true);
         const parsed = JSON.parse(stored);
         if (parsed.emoji && parsed.label) setMyVibe(parsed);
+      }
+      // Load permanent visitor number if we have one
+      const savedVisitorNumber = localStorage.getItem(VISITOR_NUMBER_KEY);
+      if (savedVisitorNumber) {
+        setPermanentVisitorNumber(Number(savedVisitorNumber));
       }
     } catch {}
 
@@ -83,9 +91,14 @@ export default function VibeCheck() {
       setSubmitted(true);
       const myVibeData = vibeLabel(vibe);
       setMyVibe(myVibeData);
+      setPermanentVisitorNumber(data.visitorNumber);
       // Mark as voted for this month, store their vibe for returning visits
       try {
         localStorage.setItem(storageKey(), JSON.stringify(myVibeData));
+        // Store visitor number permanently — only written once, never overwritten
+        if (!localStorage.getItem(VISITOR_NUMBER_KEY)) {
+          localStorage.setItem(VISITOR_NUMBER_KEY, String(data.visitorNumber));
+        }
       } catch {}
     } catch {
       // fail silently
@@ -208,7 +221,7 @@ export default function VibeCheck() {
                 <p className="text-sm text-slate-400">
                   You're site visitor{" "}
                   <span className="text-royal-600 font-semibold">
-                    #{displayResult?.visitorNumber.toLocaleString()}
+                    #{(permanentVisitorNumber ?? displayResult?.visitorNumber)?.toLocaleString()}
                   </span>
                 </p>
               </div>
