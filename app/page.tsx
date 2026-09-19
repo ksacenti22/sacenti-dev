@@ -280,11 +280,17 @@ export default function HomePage() {
       <section className="py-20 bg-slate-50">
         <div className="max-w-5xl mx-auto px-6">
           <h2 className="reveal text-2xl font-bold text-royal-700 mb-12">Experience</h2>
-          <div className="relative space-y-12 pl-6 border-l-2 border-royal-100">
+          <div className="relative">
+            {/* Timeline rail — centered on x=8px, same as the dots below */}
+            <span
+              aria-hidden="true"
+              className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-royal-100"
+            />
+            <div className="space-y-12 pl-8">
             {experience.map((job, i) => (
               <div key={i} className="reveal relative">
                 {/* Timeline dot */}
-                <span className="absolute -left-[1.6rem] top-1.5 w-4 h-4 rounded-full bg-royal-400 border-2 border-white shadow" />
+                <span className="absolute -left-8 top-1.5 w-4 h-4 rounded-full bg-royal-400 border-2 border-white shadow" />
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-royal-100 transition-all">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-1">
@@ -308,6 +314,7 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </div>
       </section>
