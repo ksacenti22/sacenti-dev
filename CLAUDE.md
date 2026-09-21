@@ -5,7 +5,7 @@ Keith Sacenti's personal website. Home base for his resume, blog, and personal b
 Live at **https://sacenti.dev** | GitHub: **https://github.com/ksacenti22/sacenti-dev**
 
 ## Stack
-Next.js 16 (App Router, Turbopack) · React 18 · TypeScript 5 · Tailwind CSS 3 · Upstash Redis · Vercel hosting
+Next.js 16 (App Router, Turbopack) · React 18 · TypeScript 5 · Tailwind CSS 3 · ESLint 9 (flat config) · Upstash Redis · Vercel hosting
 
 ## Key conventions
 - **Blog posts** are `.md` files in `posts/` with frontmatter: `title`, `date`, `excerpt`, `tags[]`
@@ -13,6 +13,11 @@ Next.js 16 (App Router, Turbopack) · React 18 · TypeScript 5 · Tailwind CSS 3
 - **Custom color palette** — royal blue defined as `royal-50` through `royal-900` in `tailwind.config.ts`
 - **Scroll animations** — add `reveal` or `reveal-stagger` class to any element; `ScrollReveal.tsx` handles the rest
 - **Publishing** = `git add` → `git commit` → `git push` — Vercel auto-deploys in ~30s
+- **Linting** = `npm run lint` (runs `eslint .` against `eslint.config.mjs`). `next lint` no longer exists in Next 16
+
+## Next 16 gotchas
+- Route `params` (and `searchParams`) are a **Promise** — always `const { slug } = await params`. Reading `params.slug` directly returns `undefined`, and in `app/blog/[slug]/page.tsx` that silently turned every post into a 404 from the April upgrade until September 2026
+- `react-hooks/set-state-in-effect` is on. Reading `localStorage` after mount (as `VibeCheck.tsx` does) is the right pattern for SSR, so that block carries a scoped disable with the reason
 
 ## Pages
 | Route | File | Notes |
@@ -47,11 +52,10 @@ outside the `space-y-12` wrapper on purpose — as a child it would count as a s
 
 ## Known issues to fix
 1. **`https://keith.digital` doesn't forward** — Squarespace forwarding lacks SSL. Fix: add `keith.digital` to Vercel as a redirect domain (same A/CNAME records as sacenti.dev)
-2. **`tsconfig.tsbuildinfo` is committed** — it is a build artifact and churns on every typecheck; should be gitignored and removed from the index
-3. **`eslint-config-next` is pinned to 14.2.3** while Next is on 16.x — `npm run lint` is running rules from two majors back
 
 ## Suggested next steps
 - Fix keith.digital HTTPS (see above)
+- Move Inter to `next/font/google` — self-hosts the font (no request to Google on each visit, no render-blocking CSS). The wiring already expects it: Tailwind reads `var(--font-inter)`; set `variable: "--font-inter"`, put `inter.variable` on `<html>`, then drop the `<link>` tags in `layout.tsx` and the `--font-inter` line in `globals.css`. Clears the one remaining lint warning
 - Add an Open Graph preview image (`openGraph` is set in `layout.tsx` but has no `images`)
 - Contact section or email link
 - Consider server-side vote dedup for Vibe Check if the numbers ever need to be trustworthy
