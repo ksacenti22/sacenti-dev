@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import VibeCheck from "@/components/VibeCheck";
 
 const socialLinks = [
@@ -419,7 +418,7 @@ export default function HomePage() {
             <h3 className="text-2xl font-bold text-white mb-2">Let's connect</h3>
             <p className="text-royal-200 text-sm">Find me on LinkedIn or explore my projects on GitHub.</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             {socialLinks.map(({ label, href, icon }) => (
               <a
                 key={label}
