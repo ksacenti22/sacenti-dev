@@ -9,8 +9,12 @@ export async function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+// Next 15+ passes route params as a Promise; reading params.slug directly returns undefined.
+type PostPageProps = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: PostPageProps) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
   if (!post) return {};
   return {
     title: `${post.title} | Keith Sacenti`,
@@ -18,8 +22,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+export default async function PostPage({ params }: PostPageProps) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
   if (!post) notFound();
 
   const processed = await remark().use(html).process(post.content);
