@@ -48,7 +48,10 @@ export default function VibeCheck() {
   const [permanentVisitorNumber, setPermanentVisitorNumber] = useState<number | null>(null);
 
   useEffect(() => {
-    // Check if already submitted this month
+    // Check if already submitted this month.
+    // localStorage only exists in the browser, so it has to be read after mount —
+    // reading it in a useState initializer would mismatch the server render.
+    /* eslint-disable react-hooks/set-state-in-effect */
     try {
       const stored = localStorage.getItem(storageKey());
       if (stored) {
@@ -62,6 +65,7 @@ export default function VibeCheck() {
         setPermanentVisitorNumber(Number(savedVisitorNumber));
       }
     } catch {}
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Fetch current stats
     fetch("/api/vibe")
