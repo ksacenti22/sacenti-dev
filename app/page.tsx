@@ -54,6 +54,14 @@ const experience = [
     ],
   },
   {
+    company: "Alumni Leadership Board – UMass Hospitality Dept",
+    location: "Amherst, MA",
+    roles: [{ title: "Board Member", start: "2019-10", end: "2023-06" }],
+    bullets: [
+      "Lead student-facing activities including classroom visits, experiential learning, and student mentoring programs.",
+    ],
+  },
+  {
     company: "Acquia",
     location: "Boston, MA",
     roles: [
@@ -123,24 +131,30 @@ const education = [
   },
 ];
 
-const volunteering = [
+const volunteering: {
+  org: string;
+  location: string;
+  role: string;
+  start: string;
+  end?: string | null;
+  bullets?: string[];
+}[] = [
+  {
+    org: "Boston Product Management Association (BPMA)",
+    location: "Boston, MA",
+    role: "Member",
+    start: "2024-01",
+    end: null,
+  },
   {
     org: "Young Alumni Council – UMass Hospitality Dept",
     location: "Boston, MA",
     role: "President",
-    period: "2017 – Present",
+    start: "2017",
+    end: "2023-09",
     bullets: [
-      "Lead events, outreach and mentorship for 1,500+ young alumni in Boston and New York City.",
-      "Drive community engagement with a 68% YoY attendance increase.",
-    ],
-  },
-  {
-    org: "Alumni Leadership Board – UMass Hospitality Dept",
-    location: "Boston, MA",
-    role: "Board Member",
-    period: "2019 – Present",
-    bullets: [
-      "Lead student-facing activities including classroom visits, experiential learning, and student mentoring programs.",
+      "Led events, outreach and mentorship for 1,500+ young alumni in Boston and New York City.",
+      "Drove community engagement with a 68% YoY attendance increase.",
     ],
   },
 ];
@@ -349,7 +363,9 @@ export default function HomePage() {
                       </p>
                     </>
                   )}
-                  <p className="text-slate-600 text-sm leading-relaxed mb-4">{job.description}</p>
+                  {job.description && (
+                    <p className="text-slate-600 text-sm leading-relaxed mb-4">{job.description}</p>
+                  )}
                   <ul className="space-y-2">
                     {job.bullets.map((b, bi) => (
                       <li key={bi} className="flex items-start gap-2 text-sm text-slate-600">
@@ -401,15 +417,17 @@ export default function HomePage() {
                   <span className="text-sm text-slate-400">{v.location}</span>
                 </div>
                 <p className="text-royal-600 font-semibold text-sm">{v.role}</p>
-                <p className="text-slate-400 text-xs mb-3">{v.period}</p>
-                <ul className="space-y-2">
-                  {v.bullets.map((b, bi) => (
-                    <li key={bi} className="flex items-start gap-2 text-sm text-slate-600">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-royal-300 flex-shrink-0" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-slate-400 text-xs">{formatPeriod(v.start, v.end)}</p>
+                {v.bullets && v.bullets.length > 0 && (
+                  <ul className="space-y-2 mt-3">
+                    {v.bullets.map((b, bi) => (
+                      <li key={bi} className="flex items-start gap-2 text-sm text-slate-600">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-royal-300 flex-shrink-0" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
