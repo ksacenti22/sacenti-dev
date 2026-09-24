@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { formatPeriod, formatDuration, companyTenure } from "@/lib/tenure";
 import VibeCheck from "@/components/VibeCheck";
 
 const socialLinks = [
@@ -31,12 +32,18 @@ const strengths = [
   "Technical Documentation",
 ];
 
+// Tenure ("3 mos", "3 yrs 4 mos") is computed at render time, so the page is
+// rebuilt daily to keep the current role's figure from going stale between pushes.
+export const revalidate = 86400;
+
 const experience = [
   {
     company: "OutSystems",
     location: "Boston, MA",
-    role: "Lead Product Manager, Cloud Security & Compliance",
-    period: "June 2023 – Present",
+    roles: [
+      { title: "Principal Product Manager, Cloud Security & Compliance", start: "2026-07", end: null },
+      { title: "Lead Product Manager, Cloud Security & Compliance", start: "2023-06", end: "2026-07" },
+    ],
     description:
       "As the world's leading low-code application development platform, OutSystems lets you ship modern, secure applications faster. I own the definition and market development of our next gen platform's (ODC) security, including innovation, monetization, and global governmental offerings.",
     bullets: [
@@ -49,9 +56,10 @@ const experience = [
   {
     company: "Acquia",
     location: "Boston, MA",
-    role: "Senior Product Manager, Security & Compliance",
-    period: "April 2022 – May 2023",
-    subRole: "Product Manager, Security & Compliance · 2020 – April 2022",
+    roles: [
+      { title: "Senior Product Manager, Security & Compliance", start: "2022-04", end: "2023-05" },
+      { title: "Product Manager, Security & Compliance", start: "2020-06", end: "2022-04" },
+    ],
     description:
       "Acquia is the foremost Drupal host and developer tools provider, helping Fortune 100 companies build exceptional digital experiences. I planned and operationalized security objectives across Acquia's PaaS and CRM tools.",
     bullets: [
@@ -63,8 +71,7 @@ const experience = [
   {
     company: "StudentUniverse",
     location: "Waltham, MA",
-    role: "Product Manager, Non-Air Products",
-    period: "2019 – 2020",
+    roles: [{ title: "Product Manager, Non-Air Products", start: "2019", end: "2020" }],
     description:
       "StudentUniverse partners with 100+ international airlines to provide youth travelers the best prices to explore the world. I led product management, design and analytics for all non-flight products.",
     bullets: [
@@ -76,8 +83,7 @@ const experience = [
   {
     company: "OV Loop",
     location: "Danvers, MA",
-    role: "Product Manager, CRM Platforms",
-    period: "2017 – 2019",
+    roles: [{ title: "Product Manager, CRM Platforms", start: "2017", end: "2019" }],
     description:
       "OV Loop is a fintech startup enabling clients to boost revenue by combining one-tap payments and a virtual marketplace. I led development of OV Loop's CRM software.",
     bullets: [
@@ -87,8 +93,7 @@ const experience = [
   {
     company: "Hotel Asset Value Enhancement (hotelAVE)",
     location: "National",
-    role: "Management Consultant",
-    period: "2016 – 2017",
+    roles: [{ title: "Management Consultant", start: "2016", end: "2017" }],
     description:
       "hotelAVE executed 20-week, on-site consulting projects for leading lodging brands. I collaborated with line-level employees and area leaders to identify opportunities, install objectives, and sustain results.",
     bullets: [
@@ -99,8 +104,7 @@ const experience = [
   {
     company: "J. Alexander's Restaurants",
     location: "Nashville, TN",
-    role: "Senior Sous Chef",
-    period: "2014 – 2016",
+    roles: [{ title: "Senior Sous Chef", start: "2014", end: "2016" }],
     description:
       "With a core philosophy of providing guests a delightful dining experience, I led a team of 60+ to create scratch cuisine, thoughtful service, and genuine interaction.",
     bullets: [
@@ -293,14 +297,58 @@ export default function HomePage() {
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-royal-100 transition-all">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-1">
-                    <h3 className="text-lg font-bold text-slate-900">{job.company}</h3>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900">{job.company}</h3>
+                      {job.roles.length > 1 && companyTenure(job.roles) && (
+                        <p className="text-slate-500 text-xs mt-0.5">{companyTenure(job.roles)}</p>
+                      )}
+                    </div>
                     <span className="text-sm text-slate-400 whitespace-nowrap">{job.location}</span>
                   </div>
-                  <p className="text-royal-600 font-semibold text-sm mb-0.5">{job.role}</p>
-                  {job.subRole && (
-                    <p className="text-slate-400 text-xs mb-0.5 italic">{job.subRole}</p>
+
+                  {job.roles.length > 1 ? (
+                    /* Promotions within one company: a small timeline of its own, so an
+                       earlier role reads as a role rather than a footnote. */
+                    <ol className="mt-3 mb-3 pl-[22px] space-y-3">
+                      {job.roles.map((role, ri) => {
+                        const duration = formatDuration(role.start, role.end);
+                        return (
+                          <li key={ri} className="relative">
+                            {ri < job.roles.length - 1 && (
+                              <span
+                                aria-hidden="true"
+                                className="absolute -left-[18px] top-3.5 -bottom-[21px] w-0.5 bg-royal-100"
+                              />
+                            )}
+                            <span
+                              aria-hidden="true"
+                              className={`absolute -left-[22px] top-1 w-2.5 h-2.5 rounded-full border-2 ${
+                                ri === 0 ? "bg-royal-500 border-royal-500" : "bg-white border-royal-300"
+                              }`}
+                            />
+                            <p
+                              className={`font-semibold text-sm ${
+                                ri === 0 ? "text-royal-600" : "text-slate-600"
+                              }`}
+                            >
+                              {role.title}
+                            </p>
+                            <p className="text-slate-400 text-xs">
+                              {formatPeriod(role.start, role.end)}
+                              {duration && ` · ${duration}`}
+                            </p>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  ) : (
+                    <>
+                      <p className="text-royal-600 font-semibold text-sm mb-0.5">{job.roles[0].title}</p>
+                      <p className="text-slate-400 text-xs mb-3">
+                        {formatPeriod(job.roles[0].start, job.roles[0].end)}
+                      </p>
+                    </>
                   )}
-                  <p className="text-slate-400 text-xs mb-3">{job.period}</p>
                   <p className="text-slate-600 text-sm leading-relaxed mb-4">{job.description}</p>
                   <ul className="space-y-2">
                     {job.bullets.map((b, bi) => (

@@ -15,6 +15,12 @@ Next.js 16 (App Router, Turbopack) · React 18 · TypeScript 5 · Tailwind CSS 3
 - **Publishing** = `git add` → `git commit` → `git push` — Vercel auto-deploys in ~30s
 - **Linting** = `npm run lint` (runs `eslint .` against `eslint.config.mjs`). `next lint` no longer exists in Next 16
 
+## Resume data shape
+- Each company in `experience` holds a `roles` array, newest first: `{ title, start, end }`. `end: null` means current
+- Dates are `"YYYY-MM"`, or `"YYYY"` for older roles where only the year is known
+- `lib/tenure.ts` formats the period and the duration. Durations are **inclusive** (Jun 2023 – Jul 2026 is 3 yrs 2 mos), which is how LinkedIn counts — deliberately, so the two never disagree by a month. Year-only dates get no duration
+- A company with more than one role renders an inner promotion timeline and a total-tenure line; a single-role company renders exactly as before
+
 ## Next 16 gotchas
 - Route `params` (and `searchParams`) are a **Promise** — always `const { slug } = await params`. Reading `params.slug` directly returns `undefined`, and in `app/blog/[slug]/page.tsx` that silently turned every post into a 404 from the April upgrade until September 2026
 - `react-hooks/set-state-in-effect` is on. Reading `localStorage` after mount (as `VibeCheck.tsx` does) is the right pattern for SSR, so that block carries a scoped disable with the reason
@@ -22,7 +28,7 @@ Next.js 16 (App Router, Turbopack) · React 18 · TypeScript 5 · Tailwind CSS 3
 ## Pages
 | Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | Hero + full resume. All resume data is hardcoded as arrays at top of file |
+| `/` | `app/page.tsx` | Hero + full resume. All resume data is hardcoded as arrays at top of file. Rebuilt daily (`revalidate`) so computed tenure stays current |
 | `/blog` | `app/blog/page.tsx` + `BlogClient.tsx` | Server + client split for tag filtering |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Dynamic route, reads from `posts/` |
 | `/pineapple` | `app/pineapple/page.tsx` | Easter egg. Linked subtly in footer only |
